@@ -2,7 +2,7 @@ from interface import parse, getpath
 from rows_extractor import create_rows_array
 from ltl_evaluator import evaluate
 
-parsed = parse("employee_trans || employee_left || employee_right")
+parsed = parse("employee_trans -> cabbage_trans")
 
 path = getpath("./paths/path0.txt")
 
