@@ -1,8 +1,4 @@
-def create_array_with_value(size, value):
-    result = []
-    for i in range(size):
-        result.append(value)
-    return result
+from util import *
 
 def U_operator_non_determinism(first, second, i, loop_size, current_results):
     n_states = len(first)
