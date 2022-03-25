@@ -5,14 +5,9 @@ from util import *
 # ---- 0 arity operators ----
 
 def solve_atom(op, states):
-    prop = ".." + str(op.value)
     bool_row = []
     for s in states:
-        found = False
-        for l in s.labeling:
-            if str(l) == prop:
-                found = True
-        bool_row.append(found)
+        bool_row.append(op in s.labeling)
     return Row(op, bool_row)
     
 # ---- 1 arity operators ----
@@ -21,7 +16,7 @@ def solve_not(op, computed_rows):
     child = get_child_boolean_array(op, computed_rows)
     # base operator
     return Row(op, NOT_operator(child))
-    
+
 def solve_X(op, computed_rows, loop_size):
     child = get_child_boolean_array(op, computed_rows)
     # base operator
