@@ -1,5 +1,5 @@
 from Row import Row
-from base_operators import U_operator, X_operator, OR_operator
+from base_operators import U_operator, X_operator, OR_operator, NOT_operator
 
 def find_row(op, computed_rows):
     for r in computed_rows:
@@ -23,12 +23,9 @@ def solve_U(op, computed_rows, loop_size):
     return Row(op, U_operator(left_child, right_child, loop_size))
 
 def solve_impl(op, computed_rows):
-    first_child = find_row(op.children()[0], computed_rows).boolean_array
-    second_child = find_row(op.children()[1], computed_rows).boolean_array
-    bool_row = []
-    for i in range(len(first_child)):
-        bool_row.append((not first_child[i]) or second_child[i])
-    return Row(op, bool_row)
+    left_child = get_left_child(op, computed_rows)
+    right_child = get_right_child(op, computed_rows)
+    return Row(op, OR_operator(NOT_operator(left_child), right_child))
 
 def solve_or(op, computed_rows):
     left_child = get_left_child(op, computed_rows)
@@ -36,19 +33,13 @@ def solve_or(op, computed_rows):
     return Row(op, OR_operator(left_child, right_child))
 
 def solve_and(op, computed_rows):
-    first_child = find_row(op.children()[0], computed_rows).boolean_array
-    second_child = find_row(op.children()[1], computed_rows).boolean_array
-    bool_row = []
-    for i in range(len(first_child)):
-        bool_row.append(first_child[i] and second_child[i])
-    return Row(op, bool_row)
+    left_child = get_left_child(op, computed_rows)
+    right_child = get_right_child(op, computed_rows)
+    return Row(op, NOT_operator(OR_operator(NOT_operator(left_child), NOT_operator(right_child))))
 
 def solve_not(op, computed_rows):
-    child = find_row(op.children()[0], computed_rows)
-    bool_row = []
-    for b in child.boolean_array:
-        bool_row.append(not b)
-    return Row(op, bool_row)
+    child = get_left_child(op, computed_rows)
+    return Row(op, NOT_operator(child))
 
 def solve_atom(op, states):
     prop = ".." + str(op.value)

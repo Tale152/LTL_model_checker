@@ -47,6 +47,12 @@ def X_operator(child, loop_size):
 
 def OR_operator(left_child, right_child):
     result = []
-    for i in len(left_child):
+    for i in range(len(left_child)):
         result.append(left_child[i] or right_child[i])
+    return result
+
+def NOT_operator(child):
+    result = child.copy()
+    for i in range(len(result)):
+        result[i] = not result[i]
     return result
