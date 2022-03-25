@@ -1,4 +1,5 @@
 from Row import Row
+from base_operators import U_operator
 
 def find_row(op, computed_rows):
     for r in computed_rows:
@@ -6,12 +7,16 @@ def find_row(op, computed_rows):
             return r
     raise Exception("operator from previously computed rows not found: " + str(op.value))
 
+def solve_U(op, computed_rows, loop_size):
+    first_child = find_row(op.children()[0], computed_rows).boolean_array
+    second_child = find_row(op.children()[1], computed_rows).boolean_array
+    return Row(op, U_operator(first_child, second_child, loop_size))
+
 def solve_impl(op, computed_rows):
     first_child = find_row(op.children()[0], computed_rows).boolean_array
     second_child = find_row(op.children()[1], computed_rows).boolean_array
     bool_row = []
     for i in range(len(first_child)):
-        print(str(i) + " " + str((not first_child[i]) or second_child[i]))
         bool_row.append((not first_child[i]) or second_child[i])
     return Row(op, bool_row)
 
