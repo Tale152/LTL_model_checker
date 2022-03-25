@@ -1,5 +1,5 @@
 from Row import Row
-from base_operators import U_operator
+from base_operators import U_operator, X_operator
 
 def find_row(op, computed_rows):
     for r in computed_rows:
@@ -7,10 +7,20 @@ def find_row(op, computed_rows):
             return r
     raise Exception("operator from previously computed rows not found: " + str(op.value))
 
+def get_left_child(op, computed_rows):
+    return find_row(op.children()[0], computed_rows).boolean_array
+
+def get_right_child(op, computed_rows):
+    return find_row(op.children()[1], computed_rows).boolean_array
+    
+def solve_X(op, computed_rows, loop_size):
+    child = get_left_child(op, computed_rows)
+    return Row(op, X_operator(child, loop_size))
+
 def solve_U(op, computed_rows, loop_size):
-    first_child = find_row(op.children()[0], computed_rows).boolean_array
-    second_child = find_row(op.children()[1], computed_rows).boolean_array
-    return Row(op, U_operator(first_child, second_child, loop_size))
+    left_child = get_left_child(op, computed_rows)
+    right_child = get_right_child(op, computed_rows)
+    return Row(op, U_operator(left_child, right_child, loop_size))
 
 def solve_impl(op, computed_rows):
     first_child = find_row(op.children()[0], computed_rows).boolean_array

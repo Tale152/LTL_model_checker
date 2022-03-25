@@ -37,3 +37,10 @@ def U_operator(first, second, loop_size):
             i += len(r)
             bool_row += r
     return bool_row
+
+def X_operator(child, loop_size):
+    loop_index = len(child) - loop_size
+    result = child.copy()
+    result.append(child[loop_index])
+    result.pop(0)
+    return result
