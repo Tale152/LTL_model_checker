@@ -84,3 +84,11 @@ def solve_G(op, computed_rows, loop_size):
     # G(a) == false R a == !F(!a) == !(true U !a)
     U = U_operator(true_arr, NOT_operator(child), loop_size)
     return Row(op, NOT_operator(U))
+
+def solve_W(op, computed_rows, loop_size):
+    a = get_left_child(op, computed_rows)
+    b = get_right_child(op, computed_rows)
+    # a W b == (a U b) || G(a) == a U (b || G(a)) == b R (b || a) == !(!b U !(b || a))
+    OR = OR_operator(b, a)
+    U = U_operator(NOT_operator(b), NOT_operator(OR), loop_size)
+    return Row(op, NOT_operator(U))
