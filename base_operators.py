@@ -44,3 +44,9 @@ def X_operator(child, loop_size):
     result.append(child[loop_index])
     result.pop(0)
     return result
+
+def OR_operator(left_child, right_child):
+    result = []
+    for i in len(left_child):
+        result.append(left_child[i] or right_child[i])
+    return result
