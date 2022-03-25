@@ -1,5 +1,5 @@
 from Row import Row
-from base_operators import U_operator, X_operator, OR_operator, NOT_operator
+from base_operators import create_array_with_value, U_operator, X_operator, OR_operator, NOT_operator
 
 # ---- utility functions ----
 def find_row(op, computed_rows):
@@ -64,3 +64,9 @@ def solve_and(op, computed_rows):
     right_child = get_right_child(op, computed_rows)
     # a && b == !(!a || !b)
     return Row(op, NOT_operator(OR_operator(NOT_operator(left_child), NOT_operator(right_child))))
+
+def solve_F(op, computed_rows, loop_size):
+    child = get_left_child(op, computed_rows)
+    true_arr = create_array_with_value(len(child), True)
+    # Fa == true U a
+    return Row(op, U_operator(true_arr, child, loop_size))

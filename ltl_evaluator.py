@@ -1,6 +1,6 @@
 from Row import Row
 from parsing.token import TokenType
-from operators import solve_atom, solve_not, solve_and, solve_or, solve_impl, solve_U, solve_X
+from operators import solve_atom, solve_not, solve_and, solve_or, solve_impl, solve_U, solve_X, solve_F
 
 def solve_operator(op, computed_rows, states, loop_size):
     token = op.oper()
@@ -18,6 +18,8 @@ def solve_operator(op, computed_rows, states, loop_size):
         return solve_U(op, computed_rows, loop_size)
     elif token == TokenType.X:
         return solve_X(op, computed_rows, loop_size)
+    elif token == TokenType.F:
+        return solve_F(op, computed_rows, loop_size)
     else:
         #TODO
         Row(op, [])
