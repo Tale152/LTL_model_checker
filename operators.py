@@ -68,11 +68,19 @@ def solve_and(op, computed_rows):
 def solve_F(op, computed_rows, loop_size):
     child = get_left_child(op, computed_rows)
     true_arr = create_array_with_value(len(child), True)
-    # F a == true U a
+    # F(a) == true U a
     return Row(op, U_operator(true_arr, child, loop_size))
 
 def solve_R(op, computed_rows, loop_size):
     left_child = get_left_child(op, computed_rows)
     right_child = get_right_child(op, computed_rows)
     # a R b == !(!a U !b)
-    return Row(op, NOT_operator(U_operator(NOT_operator(left_child), NOT_operator(right_child), loop_size)))
+    U = U_operator(NOT_operator(left_child), NOT_operator(right_child), loop_size)
+    return Row(op, NOT_operator(U))
+
+def solve_G(op, computed_rows, loop_size):
+    child = get_left_child(op, computed_rows)
+    true_arr = create_array_with_value(len(child), True)
+    # G(a) == false R a == !F(!a) == !(true U !a)
+    U = U_operator(true_arr, NOT_operator(child), loop_size)
+    return Row(op, NOT_operator(U))
