@@ -21,9 +21,11 @@ class OperatorsSolver:
         child = get_child_boolean_array(op, self.computed_rows)
         return Row(op, strategy(child))
 
-    def NOT(self, op): return self.__solve_unary_operator(op, self.bo.NOT)
+    def NOT(self, op):
+        return self.__solve_unary_operator(op, self.bo.NOT)
 
-    def X(self, op): return self.__solve_unary_operator(op, self.bo.X)
+    def X(self, op):
+        return self.__solve_unary_operator(op, self.bo.X)
 
     def F(self, op): # F(a) == true U a
         F_strategy = lambda a: self.bo.U(true_array(len(a)), a)
@@ -40,9 +42,11 @@ class OperatorsSolver:
         b = get_right_child_boolean_array(op, self.computed_rows)
         return Row(op, strategy(a, b))
 
-    def U(self, op): return self.__solve_binary_operator(op, self.bo.U)
+    def U(self, op):
+        return self.__solve_binary_operator(op, self.bo.U)
 
-    def OR(self, op): return self.__solve_binary_operator(op, self.bo.OR)
+    def OR(self, op):
+        return self.__solve_binary_operator(op, self.bo.OR)
 
     def IMPL(self, op): # a -> b == !a || b
         IMPL_strategy = lambda a, b: self.bo.OR(self.bo.NOT(a), b)

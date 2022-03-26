@@ -1,8 +1,5 @@
 def find_row(op, computed_rows):
-    for r in computed_rows:
-        if r.operator == op:
-            return r
-    raise Exception("operator from previously computed rows not found: " + str(op.value))
+    return next(filter(lambda r: r.operator == op, computed_rows))
 
 def get_left_child_boolean_array(op, computed_rows):
     return find_row(op.children()[0], computed_rows).boolean_array
@@ -14,10 +11,7 @@ def get_child_boolean_array(op, computed_rows):
     return get_left_child_boolean_array(op, computed_rows)
 
 def create_array_with_value(size, value):
-    result = []
-    for i in range(size):
-        result.append(value)
-    return result
+    return [value for _ in range(size)]
 
 def true_array(size):
     return create_array_with_value(size, True)
