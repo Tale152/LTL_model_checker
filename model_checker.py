@@ -13,14 +13,21 @@ from model_checking.ordered_operators_extractor import extract_ordered_operators
 def modelcheck(m,f):
 	path_object = getpath(m)
 	parsed_formula = parse(f)
-	return evaluate(extract_ordered_operators_array(parsed_formula), path_object.path, path_object.loop)
+	return __evaluate(extract_ordered_operators_array(parsed_formula), path_object.path, path_object.loop)
 
-def evaluate(operators, states, loop_size):
+def __evaluate(operators, states, loop_size):
     computed_rows = []
     solver = OperatorsSolver(states, loop_size, computed_rows)
     for op in operators:
         computed_rows.append(__solve_operator(op, solver))
     last_row = computed_rows[-1].boolean_array
+
+    states_with_formula_False = []
+    for i in range(len(last_row)):
+        if last_row[i] == False:
+            states_with_formula_False.append(i + 2)
+    print("LTL formula not valid in states at line: " + str(states_with_formula_False))
+
     return all(b == True for b in last_row)
     
 def __solve_operator(op, solver):
