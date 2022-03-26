@@ -5,6 +5,25 @@ class BaseOperatorsSolver:
     def __init__(self, loop_size):
         self.loop_size = loop_size
 
+    def NOT(self, child):
+        result = child.copy()
+        for i in range(len(result)):
+            result[i] = not result[i]
+        return result
+
+    def OR(self, left_child, right_child):
+        result = []
+        for i in range(len(left_child)):
+            result.append(left_child[i] or right_child[i])
+        return result
+
+    def X(self, child):
+        result = child.copy()
+        loop_start_index = len(child) - self.loop_size
+        result.append(child[loop_start_index])
+        result.pop(0)
+        return result
+
     def U(self, first_child, second_child):
         # initializing array with "not determinated" values (add one more element for replicating the start of lasso loop)
         result = create_array_with_value(len(first_child) + 1, "nd")
@@ -28,23 +47,4 @@ class BaseOperatorsSolver:
                 result[-1] = result[loop_start_index] # synchronizing beginning of lazo loop and it's copy at the end of array result
 
         result.pop(-1) # removing copy of beginning of lazo loop since it isn't needed anymore
-        return result
-
-    def X(self, child):
-        result = child.copy()
-        loop_start_index = len(child) - self.loop_size
-        result.append(child[loop_start_index])
-        result.pop(0)
-        return result
-
-    def OR(self, left_child, right_child):
-        result = []
-        for i in range(len(left_child)):
-            result.append(left_child[i] or right_child[i])
-        return result
-
-    def NOT(self, child):
-        result = child.copy()
-        for i in range(len(result)):
-            result[i] = not result[i]
         return result
