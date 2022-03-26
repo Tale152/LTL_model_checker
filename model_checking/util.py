@@ -15,3 +15,9 @@ def create_array_with_value(size, value):
 
 def true_array(size):
     return create_array_with_value(size, True)
+
+def get_first_occurrence_index_or_default(array, starting_from, value, default):
+    try:
+        return array.index(value, starting_from)
+    except:
+        return default
