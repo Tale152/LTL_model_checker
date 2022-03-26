@@ -1,84 +1,61 @@
 from Row import Row
-from base_operators import *
+from base_operators import BaseOperatorsSolver
 from util import *
 
 class OperatorsSolver:
 
     def __init__(self, states, loop_size, computed_rows):
         self.states = states
-        self.loop_size = loop_size
+        self.bo = BaseOperatorsSolver(loop_size)
         self.computed_rows = computed_rows
 
-    # ---- 0 arity operators ----
-
-    def solve_atom(self, op):
+    def ATOM(self, op):
         bool_row = []
         for s in self.states:
             bool_row.append(op in s.labeling)
         return Row(op, bool_row)
         
-    # ---- 1 arity operators ----
+    # ---- unary operators ----
 
-    def solve_not(self, op):
+    def __solve_unary_operator(self, op, strategy):
         child = get_child_boolean_array(op, self.computed_rows)
-        # base operator
-        return Row(op, NOT_operator(child))
+        return Row(op, strategy(child))
 
-    def solve_X(self, op):
-        child = get_child_boolean_array(op, self.computed_rows)
-        # base operator
-        return Row(op, X_operator(child, self.loop_size))
+    def NOT(self, op): return self.__solve_unary_operator(op, self.bo.NOT)
 
-    def solve_F(self, op):
-        child = get_child_boolean_array(op, self.computed_rows)
-        true_arr = create_array_with_value(len(child), True)
-        # F(a) == true U a
-        return Row(op, U_operator(true_arr, child, self.loop_size))
+    def X(self, op): return self.__solve_unary_operator(op, self.bo.X)
 
-    def solve_G(self, op):
-        child = get_child_boolean_array(op, self.computed_rows)
-        true_arr = create_array_with_value(len(child), True)
-        # G(a) == false R a == !F(!a) == !(true U !a)
-        U = U_operator(true_arr, NOT_operator(child), self.loop_size)
-        return Row(op, NOT_operator(U))
+    def F(self, op): # F(a) == true U a
+        F_strategy = lambda a: self.bo.U(true_array(len(a)), a)
+        return self.__solve_unary_operator(op, F_strategy)
 
-    # ---- 2 arity operators ----
+    def G(self, op): # G(a) == false R a == !F(!a) == !(true U !a)
+        G_strategy = lambda a: self.bo.NOT(self.bo.U(true_array(len(a)), self.bo.NOT(a)))
+        return self.__solve_unary_operator(op, G_strategy)
 
-    def solve_U(self, op):
+    # ---- binary operators ----
+
+    def __solve_binary_operator(self, op, strategy):
         a = get_left_child_boolean_array(op, self.computed_rows)
         b = get_right_child_boolean_array(op, self.computed_rows)
-        # base operator
-        return Row(op, U_operator(a, b, self.loop_size))
+        return Row(op, strategy(a, b))
 
-    def solve_or(self, op):
-        a = get_left_child_boolean_array(op, self.computed_rows)
-        b = get_right_child_boolean_array(op, self.computed_rows)
-        # base operator
-        return Row(op, OR_operator(a, b))
+    def U(self, op): return self.__solve_binary_operator(op, self.bo.U)
 
-    def solve_impl(self, op):
-        a = get_left_child_boolean_array(op, self.computed_rows)
-        b = get_right_child_boolean_array(op, self.computed_rows)
-        # a -> b == !a || b
-        return Row(op, OR_operator(NOT_operator(a), b))
+    def OR(self, op): return self.__solve_binary_operator(op, self.bo.OR)
 
-    def solve_and(self, op):
-        a = get_left_child_boolean_array(op, self.computed_rows)
-        b = get_right_child_boolean_array(op, self.computed_rows)
-        # a && b == !(!a || !b)
-        return Row(op, NOT_operator(OR_operator(NOT_operator(a), NOT_operator(b))))
+    def IMPL(self, op): # a -> b == !a || b
+        IMPL_strategy = lambda a, b: self.bo.OR(self.bo.NOT(a), b)
+        return self.__solve_binary_operator(op, IMPL_strategy)
 
-    def solve_R(self, op):
-        a = get_left_child_boolean_array(op, self.computed_rows)
-        b = get_right_child_boolean_array(op, self.computed_rows)
-        # a R b == !(!a U !b)
-        U = U_operator(NOT_operator(a), NOT_operator(b), self.loop_size)
-        return Row(op, NOT_operator(U))
+    def AND(self, op): # a && b == !(!a || !b)
+        AND_strategy = lambda a, b: self.bo.NOT(self.bo.OR(self.bo.NOT(a), self.bo.NOT(b)))
+        return self.__solve_binary_operator(op, AND_strategy)
 
-    def solve_W(self, op):
-        a = get_left_child_boolean_array(op, self.computed_rows)
-        b = get_right_child_boolean_array(op, self.computed_rows)
-        # a W b == (a U b) || G(a) == a U (b || G(a)) == b R (b || a) == !(!b U !(b || a))
-        OR = OR_operator(b, a)
-        U = U_operator(NOT_operator(b), NOT_operator(OR), self.loop_size)
-        return Row(op, NOT_operator(U))
+    def R(self, op): # a R b == !(!a U !b)
+        R_strategy = lambda a, b: self.bo.NOT(self.bo.U(self.bo.NOT(a), self.bo.NOT(b)))
+        return self.__solve_binary_operator(op, R_strategy)
+
+    def W(self, op): # a W b == (a U b) || G(a) == a U (b || G(a)) == b R (b || a) == !(!b U !(b || a))
+        W_strategy = lambda a, b: self.bo.NOT(self.bo.U(self.bo.NOT(b), self.bo.NOT(self.bo.OR(b, a))))
+        return self.__solve_binary_operator(op, W_strategy)

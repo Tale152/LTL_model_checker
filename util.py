@@ -18,3 +18,6 @@ def create_array_with_value(size, value):
     for i in range(size):
         result.append(value)
     return result
+
+def true_array(size):
+    return create_array_with_value(size, True)
