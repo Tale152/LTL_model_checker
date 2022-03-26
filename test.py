@@ -1,6 +1,6 @@
 from interface import parse, getpath
-from rows_extractor import create_rows_array
-from ltl_evaluator import evaluate
+from model_checking.rows_extractor import create_rows_array
+from model_checking.ltl_evaluator import evaluate
 
 parsed = parse("G(employee_right -> (!employee_left && !employee_trans))")
 

@@ -1,4 +1,4 @@
-from util import *
+from model_checking.util import *
 
 class BaseOperatorsSolver:
 

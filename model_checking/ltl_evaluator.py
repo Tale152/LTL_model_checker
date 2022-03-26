@@ -1,5 +1,5 @@
 from parsing.token import TokenType
-from operators import OperatorsSolver
+from model_checking.operators import OperatorsSolver
 
 def evaluate(operators, states, loop_size):
     computed_rows = []

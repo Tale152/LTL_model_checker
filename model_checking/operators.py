@@ -1,6 +1,6 @@
-from Row import Row
-from base_operators import BaseOperatorsSolver
-from util import *
+from model_checking.Row import Row
+from model_checking.base_operators import BaseOperatorsSolver
+from model_checking.util import *
 
 class OperatorsSolver:
 
