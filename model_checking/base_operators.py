@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from model_checking.util import *
 
 class BaseOperatorsSolver:
