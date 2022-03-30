@@ -53,7 +53,7 @@ for p in paths:
 
     # 3
     print("\n3. An employee can spend at most three consecutive states each time at a certain side.")
-    employee_not_slacking = "!(employee_left && X(employee_left) && X(X(employee_left))) && !(employee_right && X(employee_right) && X(X(employee_right)))"
+    employee_not_slacking = "!(employee_left && X(employee_left && X(employee_left))) && !(employee_right && X(employee_right && X(employee_right)))"
     print("\n" + employee_not_slacking)
     modelcheck(p, employee_not_slacking)
     print("\n------")
@@ -67,9 +67,20 @@ for p in paths:
     modelcheck(p, not_delivered_popeye_spinachless_more_than_one_round)
     print("\n------")
     
+    # 5
+    print("\n5. Goat transportation and sheep transportation must alternate.")
+    alfa = "(goat_trans && employee_trans)"
+    not_two_goat_transportations_without_sheep = buildLTL("!(", alfa, " && X(!sheep_trans U ", alfa, "))")
+    beta = "(sheep_trans && employee_trans)"
+    not_two_sheep_transportations_without_goat = buildLTL("!(", beta, " && X(!goat_trans U ", beta, "))")
+    alternate_goat_sheep_transportations = buildLTL(not_two_goat_transportations_without_sheep, " && ", not_two_sheep_transportations_without_goat)
+    print("\n" + alternate_goat_sheep_transportations)
+    modelcheck(p, alternate_goat_sheep_transportations)
+    print("\n------")
+
     # 6
     print("\n6. The employee can only switch sides by using the boat.")
-    employee_moving = "(employee_left U employee_trans) || (employee_right U employee_trans)"
+    employee_moving = "(employee_left U (employee_trans && X(employee_right))) || (employee_right U (employee_trans && X(employee_left)))"
     print("\n" + employee_moving)
     modelcheck(p, employee_moving)
 
