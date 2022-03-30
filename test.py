@@ -53,7 +53,7 @@ for p in paths:
 
     # 3
     print("\n3. An employee can spend at most three consecutive states each time at a certain side.")
-    employee_not_slacking = "!(employee_left && X(employee_left && X(employee_left))) && !(employee_right && X(employee_right && X(employee_right)))"
+    employee_not_slacking = "!(employee_left && X(employee_left && X(employee_left && X(employee_left)))) && !(employee_right && X(employee_right && X(employee_right && X(employee_right))))"
     print("\n" + employee_not_slacking)
     modelcheck(p, employee_not_slacking)
     print("\n------")
