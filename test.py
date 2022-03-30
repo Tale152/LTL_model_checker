@@ -58,6 +58,15 @@ for p in paths:
     modelcheck(p, employee_not_slacking)
     print("\n------")
     
+    # 4
+    print("\n4. Popeye must not be delivered more than a round before spinach.")
+    alfa = "(popeye_right && employee_right && !spinach_right)"
+    beta = "(popeye_right && !employee_right)"
+    not_delivered_popeye_spinachless_more_than_one_round = buildLTL("!(", alfa, " && X(", alfa,  " U (", beta, " && X(", beta, " U ", alfa, "))))")
+    print("\n" + not_delivered_popeye_spinachless_more_than_one_round)
+    modelcheck(p, not_delivered_popeye_spinachless_more_than_one_round)
+    print("\n------")
+    
     # 6
     print("\n6. The employee can only switch sides by using the boat.")
     employee_moving = "(employee_left U employee_trans) || (employee_right U employee_trans)"
