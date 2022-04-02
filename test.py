@@ -4,7 +4,7 @@ def buildLTL(*sub_strings):
     LTL = ""
     for s in sub_strings:
         LTL += s
-    return LTL
+    return LTL 
 
 paths = [
     "./paths/path0.txt",
