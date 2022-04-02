@@ -22,13 +22,7 @@ def __evaluate(operators, states, loop_size):
         computed_rows.append(__solve_operator(op, solver))
     last_row = computed_rows[-1].boolean_array
 
-    states_with_formula_False = []
-    for i in range(len(last_row)):
-        if last_row[i] == False:
-            states_with_formula_False.append(i + 2)
-    print("LTL formula not valid in states at line: " + str(states_with_formula_False))
-
-    return all(b == True for b in last_row)
+    return last_row[0]
     
 def __solve_operator(op, solver):
     match op.oper():
