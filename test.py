@@ -69,10 +69,8 @@ for p in paths:
     
     # 5
     print("\n5. Goat transportation and sheep transportation must alternate.")
-    alfa = "(goat_trans && employee_trans)"
-    not_two_goat_transportations_without_sheep = buildLTL("!(", alfa, " && X(!sheep_trans U ", alfa, "))")
-    beta = "(sheep_trans && employee_trans)"
-    not_two_sheep_transportations_without_goat = buildLTL("!(", beta, " && X(!goat_trans U ", beta, "))")
+    not_two_goat_transportations_without_sheep = buildLTL("!(goat_trans && X(!sheep_trans U goat_trans))")
+    not_two_sheep_transportations_without_goat = buildLTL("!(sheep_trans && X(!goat_trans U sheep_trans))")
     alternate_goat_sheep_transportations = buildLTL("G(", not_two_goat_transportations_without_sheep, " && ", not_two_sheep_transportations_without_goat, ")")
     print("\n" + alternate_goat_sheep_transportations)
     print(modelcheck(p, alternate_goat_sheep_transportations))
