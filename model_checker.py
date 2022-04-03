@@ -3,7 +3,6 @@ from parsing.token import TokenType
 
 from model_checking.operators import OperatorsSolver
 from model_checking.ordered_operators_extractor import extract_ordered_operators_array
-from model_checking.ordered_operators_extractor import extract_ordered_operators_array
 
 # A model checker for LTL on regular paths
 
